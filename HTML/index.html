@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Chúc Mừng 19/11 - Trương Minh Dương ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #06050a;
+      color: #fff;
+      font-family: 'Quicksand', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .ui-layer {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.9);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+      pointer-events: none;
+      padding: 15px;
+      text-align: center;
+    }
+    .stage.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    #hold-btn {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      border: 2px solid #ff4d8d;
+      background: radial-gradient(circle, rgba(255,77,141,0.5) 0%, rgba(255,77,141,0.05) 70%);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      box-shadow: 0 0 30px rgba(255, 77, 141, 0.6);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulse 1.8s infinite;
+      pointer-events: auto;
+    }
+    #hold-btn:active {
+      transform: scale(0.88);
+      box-shadow: 0 0 50px rgba(255, 77, 141, 0.9);
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .hint {
+      margin-top: 18px;
+      font-size: 15px;
+      color: #ffb3cc;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+
+    .glow-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.4rem;
+      color: #ff66a3;
+      text-shadow: 0 0 10px #ff3385, 0 0 25px #ff1a75, 0 0 45px #ff80b3;
+      line-height: 1.3;
+      padding: 0 15px;
+    }
+
+    /* Bánh kem CSS */
+    .cake {
+      position: relative;
+      width: 180px;
+      height: 140px;
+      margin-top: 20px;
+    }
+    .layer {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 10px 10px 4px 4px;
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+      box-shadow: 0 0 20px rgba(255, 117, 140, 0.5);
+    }
+    .layer-bottom { bottom: 0; width: 180px; height: 50px; }
+    .layer-middle { bottom: 50px; width: 140px; height: 45px; background: linear-gradient(to right, #ff9a9e, #fecfef); }
+    .layer-top { bottom: 95px; width: 100px; height: 40px; }
+    .candle {
+      position: absolute;
+      bottom: 135px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 32px;
+      background: #fff;
+      border-radius: 3px;
+    }
+    .flame {
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 18px;
+      background: #ffdd00;
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 15px #ffaa00, 0 0 30px #ff5500;
+      animation: flicker 0.4s infinite alternate;
+    }
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1); }
+      to { transform: translateX(-50%) scale(1.15) rotate(3deg); }
+    }
+
+    /* Phong thư */
+    .envelope-box {
+      cursor: pointer;
+      padding: 30px 40px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 105, 180, 0.4);
+      box-shadow: 0 0 35px rgba(255, 77, 141, 0.35);
+      animation: float 2.2s infinite ease-in-out;
+      pointer-events: auto;
+    }
+    .envelope-icon {
+      font-size: 64px;
+      display: block;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* Giao diện Thư cuối cùng */
+    .letter-card {
+      background: #fffcf4;
+      color: #3b232a;
+      padding: 22px 24px;
+      border-radius: 20px;
+      max-width: 380px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 2px solid #ffcc66;
+      box-shadow: 0 0 50px rgba(255, 204, 102, 0.4);
+      text-align: center;
+      pointer-events: auto;
+    }
+    .badge-date {
+      display: inline-block;
+      background: #fff3cd;
+      color: #856404;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .letter-card h3 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      color: #d6336c;
+      margin-bottom: 8px;
+    }
+    .letter-card p {
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin-bottom: 12px;
+      color: #4a2c3d;
+      text-align: justify;
+    }
+    .letter-card img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="ui-layer">
+    <!-- Bước 0 -->
+    <div id="stage-0" class="stage active">
+      <div id="hold-btn">💌</div>
+      <div class="hint">Nhấn giữ để mở bất ngờ</div>
+    </div>
+
+    <!-- Bước 1 -->
+    <div id="stage-1" class="stage">
+      <div class="glow-text">Chúc Mừng<br>Ngày 19/11 ❤️</div>
+    </div>
+
+    <!-- Bước 2 -->
+    <div id="stage-2" class="stage">
+      <div class="glow-text" style="color: #ffd1dc; font-size: 3rem;">Trương Minh Dương ✨</div>
+    </div>
+
+    <!-- Bước 3 -->
+    <div id="stage-3" class="stage">
+      <div class="glow-text" style="font-size: 2.8rem;">Sinh Nhật Vui Vẻ & Hạnh Phúc!</div>
+      <div class="cake">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="layer layer-top"></div>
+        <div class="layer layer-middle"></div>
+        <div class="layer layer-bottom"></div>
+      </div>
+    </div>
+
+    <!-- Bước 4 -->
+    <div id="stage-4" class="stage">
+      <div class="hint" style="position: absolute; bottom: 12%;">Chạm để tiếp tục khám phá ✨</div>
+    </div>
+
+    <!-- Bước 5: Nhập mã PIN bảo mật (Bí mật chỉ có bạn & anh ấy biết) -->
+    <div id="stage-5" class="stage">
+      <div style="background: rgba(255,255,255,0.08); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,105,180,0.4); text-align: center; max-width: 320px; pointer-events: auto;">
+        <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
+        <div class="hint" style="margin-bottom: 15px; color: #ffb3cc;">Nhập mã bí mật để mở thư<br><span style="font-size: 12px; opacity: 0.8;">(Gợi ý: Ngày sinh nhật 1911)</span></div>
+        <input type="password" id="secret-pin" placeholder="Nhập mật khẩu..." style="padding: 10px 15px; border-radius: 12px; border: none; outline: none; width: 100%; text-align: center; font-size: 16px; margin-bottom: 15px; background: #fff; color: #333;" />
+        <button id="submit-pin-btn" style="background: #ff4d8d; color: white; border: none; padding: 10px 20px; border-radius: 15px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 12px rgba(255,77,141,0.4);">Mở Thư ❤️</button>
+      </div>
+    </div>
+
+    <!-- Bước 6: Bức thư thuần túy -->
+    <div id="stage-6" class="stage">
+      <div class="letter-card">
+        <div class="badge-date">19/11 • SINH NHẬT & QUỐC TẾ NAM GIỚI</div>
+        <h3>Gửi Trương Minh Dương ❤️</h3>
+        <p>Chúc mừng sinh nhật anh iu Trương Minh Dương và chúc mừng anh nhân Ngày Quốc tế Nam giới 19/11! Cảm ơn anh vì đã luôn ấm áp, bản lĩnh và là điểm tựa bình yên nhất của em. Tuổi mới chúc anh thật nhiều sức khỏe, công việc thuận lợi rực rỡ, mọi dự định đều thành công và luôn giữ nụ cười tươi trên môi. Dù ngoài kia có bộn bề thế nào, phía sau anh vẫn luôn có em yêu thương và đồng hành cùng anh! ❤️</p>
+        
+        <!-- Thay tên file ảnh của bạn vào src (VD: src="anh.jpg") -->
+        <img src="3.jpg" alt="Ảnh kỷ niệm">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(freq, time, duration, type = 'triangle') {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + time);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime + time);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + time);
+        osc.stop(audioCtx.currentTime + time + duration);
+      } catch(e) {}
+    }
+
+    function playHappyBirthday() {
+      initAudio();
+      if (!audioCtx) return;
+      const G4 = 392.00, A4 = 440.00, B4 = 493.88, C5 = 523.25, D5 = 587.33, E5 = 659.25, F5 = 698.46;
+      const melody = [
+        { f: G4, d: 0.3, t: 0.0 }, { f: G4, d: 0.3, t: 0.35 }, { f: A4, d: 0.6, t: 0.7 }, { f: G4, d: 0.6, t: 1.35 }, { f: C5, d: 0.6, t: 2.0 }, { f: B4, d: 1.2, t: 2.65 },
+        { f: G4, d: 0.3, t: 4.0 }, { f: G4, d: 0.3, t: 4.35 }, { f: A4, d: 0.6, t: 4.7 }, { f: G4, d: 0.6, t: 5.35 }, { f: D5, d: 0.6, t: 6.0 }, { f: C5, d: 1.2, t: 6.65 },
+        { f: G4, d: 0.3, t: 8.0 }, { f: G4, d: 0.3, t: 8.35 }, { f: E5, d: 0.6, t: 8.7 }, { f: C5, d: 0.6, t: 9.35 }, { f: B4, d: 0.6, t: 10.0 }, { f: A4, d: 1.2, t: 10.65 },
+        { f: F5, d: 0.3, t: 12.0 }, { f: F5, d: 0.3, t: 12.35 }, { f: E5, d: 0.6, t: 12.7 }, { f: C5, d: 0.6, t: 13.35 }, { f: D5, d: 0.6, t: 14.0 }, { f: C5, d: 1.5, t: 14.65 }
+      ];
+      melody.forEach(note => { playTone(note.f, note.t, note.d); });
+      setTimeout(() => { if (started) playHappyBirthday(); }, 17000);
+    }
+
+    function playExplosionSound() {
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const bufferSize = audioCtx.sampleRate * 0.9;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(500, audioCtx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.9);
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.9);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        noise.start();
+
+        [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, idx) => {
+          playTone(f, 0.15 * idx, 0.6, 'sine');
+        });
+      } catch(e) {}
+    }
+
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mode = 'stars';
+    const stars = Array.from({ length: 220 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.8 + 0.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      color: Math.random() > 0.3 ? '#ff66a3' : '#ffffff'
+    }));
+
+    const hearts3D = Array.from({ length: 75 }, (_, i) => {
+      const phi = Math.acos(-1 + (2 * i) / 75);
+      const theta = Math.sqrt(75 * Math.PI) * phi;
+      return {
+        x: Math.cos(theta) * Math.sin(phi),
+        y: Math.sin(theta) * Math.sin(phi),
+        z: Math.cos(phi),
+        size: Math.random() * 12 + 12
+      };
+    });
+
+    let fireworks = [];
+    function triggerFireworks() {
+      playExplosionSound();
+      for(let i=0; i<130; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 2;
+        fireworks.push({
+          x: width / 2,
+          y: height / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color: ['#ff4d8d', '#ffd1dc', '#ffff80', '#ff80bf', '#ff3366'][Math.floor(Math.random()*5)],
+          size: Math.random() * 4 + 2
+        });
+      }
+    }
+
+    let angleY = 0;
+    function render() {
+      ctx.fillStyle = 'rgba(6, 5, 10, 0.25)';
+      ctx.fillRect(0, 0, width, height);
+
+      stars.forEach(s => {
+        s.x = (s.x + s.vx + width) % width;
+        s.y = (s.y + s.vy + height) % height;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+      });
+
+      if (mode === 'sphere') {
+        angleY += 0.015;
+        const radius = Math.min(width, height) * 0.3;
+        hearts3D.forEach(h => {
+          const rotX = h.x * Math.cos(angleY) - h.z * Math.sin(angleY);
+          const rotZ = h.z * Math.cos(angleY) + h.x * Math.sin(angleY);
+          const scale = 300 / (300 + rotZ * radius);
+          const sx = width / 2 + rotX * radius * scale;
+          const sy = height / 2 + h.y * radius * scale;
+
+          ctx.font = `${h.size * scale}px Arial`;
+          ctx.globalAlpha = Math.max(0.2, (rotZ + 1.5) / 2.5);
+          ctx.fillText('💗', sx, sy);
+          ctx.globalAlpha = 1;
+        });
+      }
+
+      fireworks.forEach((f, index) => {
+        f.x += f.vx;
+        f.y += f.vy;
+        f.vy += 0.08;
+        f.alpha -= 0.015;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, f.alpha);
+        ctx.fillStyle = f.color;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        if (f.alpha <= 0) fireworks.splice(index, 1);
+      });
+
+      requestAnimationFrame(render);
+    }
+    render();
+
+    function switchStage(fromId, toId) {
+      document.getElementById(fromId).classList.remove('active');
+      document.getElementById(toId).classList.add('active');
+    }
+
+    const holdBtn = document.getElementById('hold-btn');
+    let holdTimer = null;
+    let started = false;
+
+    function startShow() {
+      if (started) return;
+      started = true;
+      initAudio();
+      playHappyBirthday();
+      switchStage('stage-0', 'stage-1');
+
+      setTimeout(() => switchStage('stage-1', 'stage-2'), 3500);
+      setTimeout(() => switchStage('stage-2', 'stage-3'), 7000);
+      setTimeout(() => {
+        mode = 'sphere';
+        switchStage('stage-3', 'stage-4');
+      }, 11000);
+    }
+
+    holdBtn.addEventListener('pointerdown', () => { holdTimer = setTimeout(startShow, 600); });
+    holdBtn.addEventListener('pointerup', () => clearTimeout(holdTimer));
+    holdBtn.addEventListener('pointerleave', () => clearTimeout(holdTimer));
+
+    document.getElementById('stage-4').addEventListener('click', () => {
+      mode = 'stars';
+      switchStage('stage-4', 'stage-5');
+    });
+
+    // Xử lý mã PIN bảo mật (Mặc định là 1911, bạn có thể thay đổi số ở dưới)
+    const MY_SECRET_PIN = "1911";
+
+    document.getElementById('submit-pin-btn').addEventListener('click', () => {
+      const enteredPin = document.getElementById('secret-pin').value;
+      if (enteredPin === MY_SECRET_PIN) {
+        triggerFireworks();
+        switchStage('stage-5', 'stage-6');
+      } else {
+        alert('Mật khẩu chưa đúng rồi anh iu ơi! ❤️');
+      }
+    });
+  </script>
+</body>
+</html>
